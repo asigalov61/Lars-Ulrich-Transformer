@@ -5,5 +5,12 @@
 
 ***
 
+## Useful links:
+
+### https://github.com/asigalov61/Lars-Ulrich-Challenge
+### https://github.com/asigalov61/Piano-Drummer
+
+***
+
 ### Project Los Angeles
 ### Tegridy Code 2023
