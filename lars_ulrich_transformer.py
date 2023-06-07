@@ -877,7 +877,7 @@ for i in tqdm.tqdm(range(number_of_prime_chords, len(chords))):
 
       cur_time += (out0[1]-10)
 
-      if cur_time < next_chord_time and out0[0] == 9:
+      if cur_time < next_chord_time and out0[0] == 9 and pout0 != out0:
         chord_time_delta = next_chord_time - cur_time
         outy.extend(out0)
     
