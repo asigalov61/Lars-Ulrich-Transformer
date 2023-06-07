@@ -477,7 +477,7 @@ if len(events_matrix1) > 0:
 
             # Cliping all values...
             time = max(0, min(255, int((e[1]-pe[1]) * MIDI_timings_multiplier)))
-            dur = max(1, min(127, int(e[2]) * MIDI_timings_multiplier))
+            dur = max(1, min(127, int(e[2] * MIDI_timings_multiplier)))
             cha = max(0, min(9, e[3]))
             ptc = max(1, min(127, e[4] + MIDI_pitches_transpose_value))
             
@@ -498,7 +498,7 @@ if len(events_matrix1) > 0:
 
           # Cliping all values...
           time = max(0, min(255, int((e[1]-ped[1]) * MIDI_timings_multiplier)))
-          dur = max(1, min(127, int(e[2]) * MIDI_timings_multiplier))
+          dur = max(1, min(127, int(e[2] * MIDI_timings_multiplier)))
           cha = max(0, min(9, e[3]))
           ptc = max(1, min(127, e[4] + MIDI_pitches_transpose_value))
           
