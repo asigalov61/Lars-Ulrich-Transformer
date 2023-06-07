@@ -1040,9 +1040,6 @@ if Sax:
 if Flute:
   inpaint_instruments.append(8)
 
-if Drums:
-  inpaint_instruments.append(9)
-
 #=====================================================
 
 if inpainting_type == 'Velocities':
