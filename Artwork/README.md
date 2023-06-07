@@ -1,6 +1,6 @@
 # Lars Ulrich Transformer Concept Artwork
 
-## Artwork courtesy Bing Images
+## Artwork courtesy of Bing Images
 
 ***
 
