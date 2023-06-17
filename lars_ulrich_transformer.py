@@ -100,9 +100,9 @@ print('=' * 70)
 print('Loading Lars Ulrich Transformer Small Pre-Trained Model...')
 print('Please wait...')
 print('=' * 70)
-hf_hub_download(repo_id='asigalov61/Lars-Ulrich-Transformer', 
-                filename='Lars_Ulrich_Transformer_Small_Trained_Model_51000_steps_0.5062_loss_0.8283_acc.pth', 
-                local_dir='/content/Lars-Ulrich-Transformer/Model/', 
+hf_hub_download(repo_id='asigalov61/Lars-Ulrich-Transformer',
+                filename='Lars_Ulrich_Transformer_Small_Trained_Model_51000_steps_0.5062_loss_0.8283_acc.pth',
+                local_dir='/content/Lars-Ulrich-Transformer/Model/',
                 local_dir_use_symlinks=False)
 print('=' * 70)
 print('Instantiating model...')
@@ -139,7 +139,7 @@ print('Model summary...')
 summary(model)
 
 
-if display_tokens_embeddings: 
+if display_tokens_embeddings:
   # Plot Token Embeddings
   tok_emb = model.module.net.token_emb.emb.weight.detach().cpu().tolist()
 
@@ -238,10 +238,10 @@ for p in prime_instruments:
 
   inp = torch.LongTensor(inp).cuda()
 
-  out = model.module.generate(inp, 
-                        4, 
-                        temperature=temperature, 
-                        return_prime=False, 
+  out = model.module.generate(inp,
+                        4,
+                        temperature=temperature,
+                        return_prime=False,
                         verbose=False)
 
   out0 = out.tolist()[0]
@@ -257,10 +257,10 @@ inp = [outy] * number_of_batches_to_generate
 
 inp = torch.LongTensor(inp).cuda()
 
-out = model.module.generate(inp, 
-                      number_of_tokens_tp_generate, 
-                      temperature=temperature, 
-                      return_prime=True, 
+out = model.module.generate(inp,
+                      number_of_tokens_tp_generate,
+                      temperature=temperature,
+                      return_prime=True,
                       verbose=True)
 
 out0 = out.tolist()
@@ -285,7 +285,7 @@ for i in range(number_of_batches_to_generate):
   print('=' * 70)
 
   if len(out1) != 0:
-    
+
       song = out1
       song_f = []
 
@@ -294,34 +294,34 @@ for i in range(number_of_batches_to_generate):
       vel = 90
       pitch = 0
       channel = 0
-                      
+
       for ss in song:
-          
+
         if ss >= 0 and ss < 10:
-            
+
             channel = ss
-        
+
         if ss >= 10 and ss < 266:
 
             time += (ss-10) * 8
-          
+
         if ss >= 266 and ss < 394:
-            
+
             dur = (ss-266) * 32
-          
+
         if ss >= 394 and ss < 650:
-      
+
             pitch = ((ss-394) % 128)
-            
+
         if ss >= 650 and ss < 658:
-            
+
             vel = ((ss-650)+1) * 15
 
             song_f.append(['note', time, dur, channel, pitch, vel ])
 
       detailed_stats = TMIDIX.Tegridy_SONG_to_MIDI_Converter(song_f,
-                                                          output_signature = 'Lars Ulrich Transformer',  
-                                                          output_file_name = '/content/Lars-Ulrich-Transformer-Composition_'+str(i), 
+                                                          output_signature = 'Lars Ulrich Transformer',
+                                                          output_file_name = '/content/Lars-Ulrich-Transformer-Composition_'+str(i),
                                                           track_name='Project Los Angeles',
                                                           list_of_MIDI_patches=[0, 24, 32, 40, 42, 19, 56, 71, 73, 0, 0, 0, 0, 0, 0, 0],
                                                           number_of_ticks_per_quarter=500)
@@ -403,7 +403,7 @@ itrack = 1
 patches = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 patch_map = [
-            [0, 1, 2, 3, 4, 5, 6, 7], # Piano 
+            [0, 1, 2, 3, 4, 5, 6, 7], # Piano
             [24, 25, 26, 27, 28, 29, 30], # Guitar
             [32, 33, 34, 35, 36, 37, 38, 39], # Bass
             [40, 41], # Violin
@@ -412,11 +412,11 @@ patch_map = [
             [56, 57, 58, 59, 60], # Trumpet
             [64, 65, 66, 67, 68, 69, 70, 71], # Sax
             [72, 73, 74, 75, 76, 77, 78], # Flute
-            [-1], # Drums            
+            [-1], # Drums
             ]
 
 while itrack < len(score):
-    for event in score[itrack]:         
+    for event in score[itrack]:
         if event[0] == 'note' or event[0] == 'patch_change':
             events_matrix.append(event)
     itrack += 1
@@ -432,21 +432,21 @@ for event in events_matrix:
         if event[0] == 'note':
             event.extend([patches[event[3]]])
             once = False
-            
+
             for p in patch_map:
                 if event[6] in p and event[3] != 9: # Except the drums
                     event[3] = patch_map.index(p)
                     once = True
-                    
+
             if not once and event[3] != 9: # Except the drums
                 event[3] = 0 # All other instruments/patches channel
                 event[5] = max(80, event[5])
-                
+
             if event[3] < 10: # We won't write chans 12-16 for now...
                 events_matrix1.append(event)
 
-if len(events_matrix1) > 0:           
-    
+if len(events_matrix1) > 0:
+
     #=======================================================
     # PRE-PROCESSING
 
@@ -480,9 +480,9 @@ if len(events_matrix1) > 0:
             dur = max(1, min(127, int(e[2] * MIDI_timings_multiplier)))
             cha = max(0, min(9, e[3]))
             ptc = max(1, min(127, e[4] + MIDI_pitches_transpose_value))
-            
+
             # Shifting drums pitches
-            if cha != 9:                
+            if cha != 9:
                 aug_ptc = ptc
             else:
                 aug_ptc = ptc + 128
@@ -491,7 +491,7 @@ if len(events_matrix1) > 0:
             vel = max(8, min(127, int(e[5] * MIDI_velocities_multiplier)))
             velocity = round(vel / 15)-1
 
-            # Writing final note 
+            # Writing final note
             melody_chords.append([time, dur, cha, aug_ptc, velocity])
 
             pe = e
@@ -501,9 +501,9 @@ if len(events_matrix1) > 0:
           dur = max(1, min(127, int(e[2] * MIDI_timings_multiplier)))
           cha = max(0, min(9, e[3]))
           ptc = max(1, min(127, e[4] + MIDI_pitches_transpose_value))
-          
+
           # Shifting drums pitches
-          if cha != 9:                
+          if cha != 9:
               aug_ptc = ptc
           else:
               aug_ptc = ptc + 128
@@ -512,7 +512,7 @@ if len(events_matrix1) > 0:
           vel = max(8, min(127, int(e[5] * MIDI_velocities_multiplier)))
           velocity = round(vel / 15)-1
 
-          # Writing final note 
+          # Writing final note
           melody_chords_d.append([time, dur, cha, aug_ptc, velocity])
 
           ped = e
@@ -534,9 +534,9 @@ if len(events_matrix1) > 0:
       #=======================================================
 
       for m in melody_chords_d:
-        
+
           # WRITING EACH NOTE HERE
-          time = m[0]                                  
+          time = m[0]
           dur = m[1]
           cha = m[2]
           ptc = m[3]
@@ -550,7 +550,7 @@ if len(events_matrix1) > 0:
       for m in melody_chords:
 
           # WRITING EACH CHORD HERE
-          time = m[0]                                  
+          time = m[0]
           dur = m[1]
           cha = m[2]
           ptc = m[3]
@@ -563,12 +563,12 @@ if len(events_matrix1) > 0:
               chords.append(cho)
             cho = []
             cho.append([cha, time+10, dur+266, ptc+394, vel+650])
-          
+
       if len(cho) > 0:
           chords.append(cho)
 
 #=======================================================
-  
+
 song = melody_chords_f
 
 song_f = []
@@ -578,38 +578,38 @@ dur = 0
 vel = 90
 pitch = 0
 channel = 0
-                
+
 for ss in song:
-    
+
   if ss >= 0 and ss < 10:
-      
+
       channel = ss
-  
+
   if ss >= 10 and ss < 266:
 
       time += (ss-10) * 8
-    
+
   if ss >= 266 and ss < 394:
-      
+
       dur = (ss-266) * 32
-    
+
   if ss >= 394 and ss < 650:
 
       pitch = ((ss-394) % 128)
-      
+
   if ss >= 650 and ss < 658:
-      
+
       vel = ((ss-650)+1) * 15
 
       song_f.append(['note', time, dur, channel, pitch, vel ])
 
 detailed_stats = TMIDIX.Tegridy_SONG_to_MIDI_Converter(song_f,
-                                                      output_signature = 'Lars Ulrich Transformer',  
+                                                      output_signature = 'Lars Ulrich Transformer',
                                                       output_file_name = '/content/Lars-Ulrich-Transformer-Seed-Composition',
                                                       track_name='Project Los Angeles',
                                                       list_of_MIDI_patches=[0, 24, 32, 40, 42, 19, 56, 71, 73, 0, 0, 0, 0, 0, 0, 0],
                                                       number_of_ticks_per_quarter=500)
-    
+
 #=======================================================
 
 print('=' * 70)
@@ -679,11 +679,11 @@ inp = [outy] * number_of_batches_to_generate
 
 inp = torch.LongTensor(inp).cuda()
 
-out = model.module.generate(inp, 
-                      number_of_tokens_to_generate, 
-                      temperature=temperature, 
-                      return_prime=include_prime_tokens_in_generated_output, 
-                      eos_token=min_stop_token, 
+out = model.module.generate(inp,
+                      number_of_tokens_to_generate,
+                      temperature=temperature,
+                      return_prime=include_prime_tokens_in_generated_output,
+                      eos_token=min_stop_token,
                       verbose=True)
 
 out0 = out.tolist()
@@ -706,7 +706,7 @@ for i in range(number_of_batches_to_generate):
   print('=' * 70)
 
   if len(out) != 0:
-      
+
       song = out1
       song_f = []
 
@@ -715,34 +715,34 @@ for i in range(number_of_batches_to_generate):
       vel = 90
       pitch = 0
       channel = 0
-                      
+
       for ss in song:
-          
+
         if ss >= 0 and ss < 10:
-            
+
             channel = ss
-        
+
         if ss >= 10 and ss < 266:
 
             time += (ss-10) * 8
-          
+
         if ss >= 266 and ss < 394:
-            
+
             dur = (ss-266) * 32
-          
+
         if ss >= 394 and ss < 650:
-      
+
             pitch = ((ss-394) % 128)
-            
+
         if ss >= 650 and ss < 658:
-            
+
             vel = ((ss-650)+1) * 15
 
             song_f.append(['note', time, dur, channel, pitch, vel ])
 
       detailed_stats = TMIDIX.Tegridy_SONG_to_MIDI_Converter(song_f,
-                                                          output_signature = 'Lars Ulrich Transformer',  
-                                                          output_file_name = '/content/Lars-Ulrich-Transformer-Composition_'+str(i), 
+                                                          output_signature = 'Lars Ulrich Transformer',
+                                                          output_file_name = '/content/Lars-Ulrich-Transformer-Composition_'+str(i),
                                                           track_name='Project Los Angeles',
                                                           list_of_MIDI_patches=[0, 24, 32, 40, 42, 19, 56, 71, 73, 0, 0, 0, 0, 0, 0, 0],
                                                           number_of_ticks_per_quarter=500)
@@ -789,6 +789,13 @@ number_of_prime_chords = 24 #@param {type:"slider", min:1, max:64, step:1}
 #@markdown Memory tokens control long-term structure of the generated drum track at the cost of the generation speed
 
 number_of_memory_tokens = 250 #@param {type:"slider", min:50, max:2045, step:5}
+
+#@markdown Relaxed conditioning option allows model to choose not to generate drums at some chords
+
+relaxed_conditioning = False #@param {type:"boolean"}
+
+#@markdown Other generation options
+
 temperature = 0.8 #@param {type:"slider", min:0.1, max:1, step:0.1}
 render_MIDI_to_audio = False #@param {type:"boolean"}
 
@@ -802,63 +809,115 @@ for c in chords[:number_of_prime_chords]:
   for cc in c:
     outy.extend(cc)
 
+#====================================================
+
 next_chord_time = 0
 cur_time = 0
 chord_time_delta = 0
 
-for i in tqdm.tqdm(range(number_of_prime_chords, len(chords))):
-  
+for c in chords[number_of_prime_chords]:
+  if c[0] != 9:
+
+    if chord_time_delta > 0:
+      if (c[1]-10) != 0:
+
+        adjusted_note = copy.deepcopy(c)
+        adjusted_note[1] = chord_time_delta+10
+
+        outy.extend(adjusted_note)
+        chord_time_delta = 0
+
+    else:
+      outy.extend(c)
+
+if (number_of_prime_chords+1) != len(chords):
+  next_chord_time = chords[number_of_prime_chords+1][0][1]-10
+else:
+  next_chord_time = 255
+
+cur_time = 0
+
+outy.extend([9])
+
+inp = [outy[-number_of_memory_tokens:]]
+inp = torch.LongTensor(inp).cuda()
+
+out = model.module.generate(inp,
+                      4,
+                      temperature=temperature,
+                      return_prime=False,
+                      eos_token=None,
+                      verbose=False)
+
+out0 = out.tolist()[0]
+
+cur_time += (out0[0]-10)
+
+if cur_time < next_chord_time:
+  chord_time_delta = next_chord_time - cur_time
+  outy.extend(out0)
+else:
+  cur_time -= (out0[0]-10)
+
+#====================================================
+
+for i in tqdm.tqdm(range(number_of_prime_chords+1, len(chords))):
+
   try:
 
     for c in chords[i]:
       if c[0] != 9:
-        
+
         if chord_time_delta > 0:
           if (c[1]-10) != 0:
 
             adjusted_note = copy.deepcopy(c)
             adjusted_note[1] = chord_time_delta+10
-            
+
             outy.extend(adjusted_note)
             chord_time_delta = 0
-        
+
         else:
           outy.extend(c)
-    
+
     if (i+1) != len(chords):
       next_chord_time = chords[i+1][0][1]-10
     else:
       next_chord_time = 255
 
+    #====================================================
+
     cur_time = 0
-    tries = 0
 
+    if not relaxed_conditioning:
 
-    outy.extend([9])
+      outy.extend([9])
 
-    inp = [outy[-number_of_memory_tokens:]]
-    inp = torch.LongTensor(inp).cuda()
+      inp = [outy[-number_of_memory_tokens:]]
+      inp = torch.LongTensor(inp).cuda()
 
-    out = model.module.generate(inp, 
-                          4, 
-                          temperature=temperature, 
-                          return_prime=False, 
-                          eos_token=None, 
-                          verbose=False)
+      out = model.module.generate(inp,
+                            4,
+                            temperature=temperature,
+                            return_prime=False,
+                            eos_token=None,
+                            verbose=False)
 
-    out0 = out.tolist()[0]
+      out0 = out.tolist()[0]
 
-    cur_time += (out0[0]-10)
+      cur_time += (out0[0]-10)
 
-    if cur_time < next_chord_time:
-      chord_time_delta = next_chord_time - cur_time
-      outy.extend(out0)
-    else:
-      cur_time -= (out0[0]-10)
+      if cur_time < next_chord_time:
+        chord_time_delta = next_chord_time - cur_time
+        outy.extend(out0)
+      else:
+        cur_time -= (out0[0]-10)
+
+    #====================================================
 
     out0 = [9]
     pout0 = []
-    
+
     while out0[0] == 9 and cur_time < next_chord_time and pout0 != out0:
 
       pout0 = out0
@@ -866,11 +925,11 @@ for i in tqdm.tqdm(range(number_of_prime_chords, len(chords))):
       inp = [outy[-number_of_memory_tokens:]]
       inp = torch.LongTensor(inp).cuda()
 
-      out = model.module.generate(inp, 
-                            5, 
-                            temperature=temperature, 
-                            return_prime=False, 
-                            eos_token=None, 
+      out = model.module.generate(inp,
+                            5,
+                            temperature=temperature,
+                            return_prime=False,
+                            eos_token=None,
                             verbose=False)
 
       out0 = out.tolist()[0]
@@ -880,9 +939,9 @@ for i in tqdm.tqdm(range(number_of_prime_chords, len(chords))):
       if cur_time < next_chord_time and out0[0] == 9 and pout0 != out0:
         chord_time_delta = next_chord_time - cur_time
         outy.extend(out0)
-    
+
     cur_time -= (out0[1]-10)
-  
+
   except KeyboardInterrupt:
     break
 
@@ -903,7 +962,7 @@ print('Sample INTs', out1[:12])
 print('=' * 70)
 
 if len(out) != 0:
-    
+
     song = out1
     song_f = []
 
@@ -912,34 +971,34 @@ if len(out) != 0:
     vel = 90
     pitch = 0
     channel = 0
-                    
+
     for ss in song:
-        
+
       if ss >= 0 and ss < 10:
-          
+
           channel = ss
-      
+
       if ss >= 10 and ss < 266:
 
           time += (ss-10) * 8
-        
+
       if ss >= 266 and ss < 394:
-          
+
           dur = (ss-266) * 32
-        
+
       if ss >= 394 and ss < 650:
-    
+
           pitch = ((ss-394) % 128)
-          
+
       if ss >= 650 and ss < 658:
-          
+
           vel = ((ss-650)+1) * 15
 
           song_f.append(['note', time, dur, channel, pitch, vel ])
 
     detailed_stats = TMIDIX.Tegridy_SONG_to_MIDI_Converter(song_f,
-                                                        output_signature = 'Lars Ulrich Transformer',  
-                                                        output_file_name = '/content/Lars-Ulrich-Transformer-Composition', 
+                                                        output_signature = 'Lars Ulrich Transformer',
+                                                        output_file_name = '/content/Lars-Ulrich-Transformer-Composition',
                                                         track_name='Project Los Angeles',
                                                         list_of_MIDI_patches=[0, 24, 32, 40, 42, 19, 56, 71, 73, 0, 0, 0, 0, 0, 0, 0],
                                                         number_of_ticks_per_quarter=500)
@@ -1065,7 +1124,7 @@ for c in chords[:number_of_prime_chords]:
 
 for i in tqdm.tqdm(range(number_of_prime_chords, len(chords))):
   try:
-    
+
     for c in chords[i]:
 
       if c[0] in inpaint_instruments:
@@ -1079,11 +1138,11 @@ for i in tqdm.tqdm(range(number_of_prime_chords, len(chords))):
           inp = torch.LongTensor(outy[-number_of_memory_tokens:]).cuda()
 
           out1 = model.module.generate(inp,
-                                seq_len, 
-                                temperature=temperature, 
-                                return_prime=True, 
+                                seq_len,
+                                temperature=temperature,
+                                return_prime=True,
                                 verbose=False)
-          
+
           with torch.no_grad():
             test_loss, test_acc = model(out1)
 
@@ -1094,7 +1153,7 @@ for i in tqdm.tqdm(range(number_of_prime_chords, len(chords))):
         max_acc_sample = samples[accs.index(max_acc)][0]
 
         outy.extend(max_acc_sample)
-      
+
       else:
         outy.extend(c)
 
@@ -1114,7 +1173,7 @@ print('Rendering results...')
 print('=' * 70)
 
 if len(outy) != 0:
-    
+
     song = outy
     song_f = []
 
@@ -1125,32 +1184,32 @@ if len(outy) != 0:
     vel = 90
 
     for ss in song:
-        
+
       if ss >= 0 and ss < 10:
-          
+
           channel = ss
-      
+
       if ss >= 10 and ss < 266:
 
           time += (ss-10) * 8
-        
+
       if ss >= 266 and ss < 394:
-          
+
           dur = (ss-266) * 32
-        
+
       if ss >= 394 and ss < 650:
-    
+
           pitch = ((ss-394) % 128)
-          
+
       if ss >= 650 and ss < 658:
-          
+
           vel = ((ss-650)+1) * 15
 
           song_f.append(['note', time, dur, channel, pitch, vel ])
 
     detailed_stats = TMIDIX.Tegridy_SONG_to_MIDI_Converter(song_f,
-                                                        output_signature = 'Lars Ulrich Transformer',  
-                                                        output_file_name = '/content/Lars-Ulrich-Transformer-Composition', 
+                                                        output_signature = 'Lars Ulrich Transformer',
+                                                        output_file_name = '/content/Lars-Ulrich-Transformer-Composition',
                                                         track_name='Project Los Angeles',
                                                         list_of_MIDI_patches=[0, 24, 32, 40, 42, 19, 56, 71, 73, 0, 0, 0, 0, 0, 0, 0],
                                                         number_of_ticks_per_quarter=500)
