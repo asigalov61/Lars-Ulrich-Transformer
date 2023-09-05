@@ -973,12 +973,12 @@ for i in range(number_of_batches_to_generate):
 
 #@markdown Generation settings
 
-number_of_prime_tokens = 505 # @param {type:"slider", min:5, max:10000, step:5}
+number_of_prime_tokens = 10 # @param {type:"slider", min:10, max:10000, step:5}
 number_of_memory_tokens = 1005 # @param {type:"slider", min:100, max:2045, step:5}
 
 number_of_chords_to_generate = 300 # @param {type:"slider", min:10, max:1000, step:1}
 number_of_tries_before_chord_regression = 5 # @param {type:"slider", min:5, max:20, step:1}
-number_of_prohibited_previous_chords = 1 # @param {type:"slider", min:1, max:10, step:1}
+number_of_prohibited_previous_chords = 0 # @param {type:"slider", min:0, max:10, step:1}
 
 temperature = 0.8 #@param {type:"slider", min:0.1, max:1, step:0.1}
 
@@ -1042,6 +1042,9 @@ def generate_chord(input_seq, number_of_memory_tokens, temperature):
 
   chord_tones = sorted(list(set([((y[3]-394) % 12) for y in chord if y[0] != 9])))
 
+  if not chord_tones:
+    chord_tones = [128]
+
   oseq = []
   for c in chord:
     oseq.extend(c)
@@ -1050,7 +1053,7 @@ def generate_chord(input_seq, number_of_memory_tokens, temperature):
 
 #============================================
 
-chords_tones = []
+chords_tones = [[128]]
 
 for c in chords:
   chord_tones = sorted(list(set([((y[3]-394) % 12) for y in c if y[0] != 9])))
@@ -1061,7 +1064,7 @@ for c in chords:
 
 #============================================
 
-outy = copy.deepcopy(melody_chords_f[5:number_of_prime_tokens])
+outy = copy.deepcopy(melody_chords_f[:number_of_prime_tokens])
 
 tries = 0
 pchords = []
