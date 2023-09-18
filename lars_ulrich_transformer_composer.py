@@ -68,7 +68,7 @@ import torch
 # %cd /content/Lars-Ulrich-Transformer
 
 import TMIDIX
-from x_transformer import TransformerWrapper, Decoder, AutoregressiveWrapper
+from x_transformer import *
 
 # %cd /content/
 print('=' * 70)
