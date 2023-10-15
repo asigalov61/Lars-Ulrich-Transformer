@@ -151,7 +151,7 @@ SEQ_LEN = 2048
 model = TransformerWrapper(
     num_tokens = 659,
     max_seq_len = SEQ_LEN,
-    attn_layers = Decoder(dim = 1024, depth = 32, heads = 8)
+    attn_layers = Decoder(dim = 1024, depth = 32, heads = 8, attn_flash=True)
 )
 
 model = AutoregressiveWrapper(model)
