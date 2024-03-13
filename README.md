@@ -1,7 +1,11 @@
 # Lars Ulrich Transformer
-## [SOTA] [339M] [88% acc] Fast full-featured drums inpainting transformer with octo-velocity
+## [DEPRECIATED] [339M] [88% acc] Fast full-featured drums inpainting transformer with octo-velocity
 
 ![lars-ulrich-metallica-mal-bray](https://github.com/asigalov61/Lars-Ulrich-Transformer/assets/56325539/63cf86f4-45b1-40b6-a7d9-3c7160f67162)
+
+***
+
+## Depreciated in favor of [Ultimate Drums Transformer](https://github.com/asigalov61/Ultimate-Drums-Transformer)
 
 ***
 
